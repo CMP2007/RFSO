@@ -85,7 +85,7 @@ app.post(`/api/persons`, (request, response)=>{
   else{response.status(400).json( {error: 'content missing'})}
 })
 
-const PORT = 3001
-app.listen(PORT, ()=>{
-    console.log(`server runnin on port ${PORT}`);
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
 })
