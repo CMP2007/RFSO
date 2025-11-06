@@ -1,6 +1,7 @@
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
+const cors = require('cors')
 
 app.use(express.json())
 morgan.token('body', (request) => {
@@ -9,6 +10,8 @@ morgan.token('body', (request) => {
 });
 const customPostFormat = ':method :url :status :response-time ms :body';
 app.use(morgan(customPostFormat));
+app.use(cors())
+app.use(express.static('dist'))
 
 let persons = [
   { 
@@ -62,7 +65,6 @@ app.delete(`/api/persons/:id`, (request, response)=>{
 
 app.post(`/api/persons`, (request, response)=>{
   const content = request.body
-
   
   if (content.name && content.number) {
     if (!persons.find((person)=>person.name === content.name)) {
