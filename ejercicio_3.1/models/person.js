@@ -15,8 +15,22 @@ mongoose.connect(url)
 })
 
 const personSchema = new mongoose.Schema({
-    name: String,
-    number: String,
+    name: {
+        type: String,
+        minLength: 3,
+        required: true
+    },
+    number: {
+        type: String,
+        minLength: 8,
+        validate: {
+        validator: function(v) {
+            return /(\d{3}-\d{8})|(\d{2}-\d{7})/.test(v);
+        },
+        message: props => `El número "${props.value}" no cumple con el formato. Debe usar XXX-XXXXXXXX o XX-XXXXXXX.`,
+        required: true
+    }
+    }
 })
 
 
