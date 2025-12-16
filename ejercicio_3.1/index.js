@@ -15,47 +15,23 @@ app.use(morgan(customPostFormat));
 app.use(cors())
 app.use(express.static('dist'))
 
-let persons = [
-  { 
-    "id": 1,
-    "name": "Arto Hellas", 
-    "number": "040-123456"
-  },
-  { 
-    "id": 2,
-    "name": "Ada Lovelace", 
-    "number": "39-44-5323523"
-  },
-  { 
-    "id": 3,
-    "name": "Dan Abramov", 
-    "number": "12-43-234345"
-  },
-  { 
-    "id": 4,
-    "name": "Mary Poppendieck", 
-    "number": "39-23-6423122"
-  }
-]
-
-app.get('/api/persons', (request, response, next)=>{
-  Person.find({}).then(person =>{
+app.get('/api/persons', (request, response, next) => {
+  Person.find({}).then(person => {
     response.json(person)
   })
   .catch(error => next(error))
 })
 
-app.get(`/info`, (request, response)=>{
+app.get(`/info`, (request, response) => {
   Person.find({})
-  .then(person =>{
+  .then(person => {
     const text = `<p>Phonebook has info for ${person.length} people </p>`
     const date = `<p> ${new Date()}</p>`
     response.send( text + date )
   })
 })
 
-app.get(`/api/persons/:id`, (request, response, next)=>{
-  const id = Number(request.params.id)
+app.get(`/api/persons/:id`, (request, response, next) => {
   Person.findById(request.params.id)
   .then(person => {
     response.json(person)
@@ -63,9 +39,9 @@ app.get(`/api/persons/:id`, (request, response, next)=>{
   .catch( error => next(error))
 })
 
-app.delete(`/api/persons/:id`, (request, response, next)=>{
+app.delete(`/api/persons/:id`, (request, response, next) => {
   Person.findByIdAndDelete(request.params.id)
-  .then(result =>{
+  .then(() => {
     response.status(204).end()
   })
   .catch(error => next(error))
@@ -88,15 +64,14 @@ app.post('/api/persons', (request, response, next) => {
 })
 
 
-app.put('/api/persons/:id', (request, response, next) =>{ 
+app.put('/api/persons/:id', (request, response, next) => {
   const { name, number } = request.body
-  
-  Person.findByIdAndUpdate
-  (request.params.id, 
-    {name, number}, 
-    {new: true, runValidators: true, context: 'query'}
+
+  Person.findByIdAndUpdate(request.params.id,
+    { name, number },
+    { new: true, runValidators: true, context: 'query' }
   )
-  .then(updatePerson =>{
+  .then(updatePerson => {
     response.json(updatePerson)
   })
   .catch(error => next(error))
@@ -110,12 +85,10 @@ const errorHandler = (error, request, response, next) => {
   }
   else if (error.name === "ValidationError"){
     console.log(error);
-    
     return response.status(400).json({ error: error.message })
   }
   next(error)
 }
-
 app.use(errorHandler)
 
 const PORT = process.env.PORT

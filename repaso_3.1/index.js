@@ -4,17 +4,17 @@ const app = express()
 const cors = require('cors')
 const Note = require('./models/note')
 
-app.use(express.static('dist'))
+app.use(express.static('build'))
 app.use(express.json())
 app.use(cors())
 
 
-app.get('/', (request, response)=>{
+app.get('/', (request, response) => {
     response.send('<H1>Hello world</H1>')
 })
 
-app.get('/api/notes', (request, response)=>{
-    Note.find({}).then(notes=>{
+app.get('/api/notes', (request, response) => {
+    Note.find({}).then(notes => {
       response.json(notes)
     })
 })
@@ -33,7 +33,7 @@ app.get('/api/notes/:id', (request, response, next) => {
 
 app.delete('/api/notes/:id', (request, response, next) => {
   Note.findByIdAndDelete(request.params.id)
-  .then(result =>{
+  .then(() => {
     response.status(204).end()
   })
   .catch(error => next(error))
@@ -56,11 +56,11 @@ app.post('/api/notes', (request, response, next) => {
 
 
 app.put('/api/notes/:id', (request, response, next) => {
-  const {content, important} = request.body
+  const { content, important } = request.body
 
   Note.findByIdAndUpdate(
-    request.params.id, 
-    {content, important},
+    request.params.id,
+     { content, important } ,
     { new: true, runValidators: true, context: 'query' }
   )
     .then(updatedNote => {
