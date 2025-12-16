@@ -28,7 +28,7 @@ app.get('/api/notes/:id', (request, response, next) => {
         response.status(404).end()
       }
     })
-    .catch(error => {error => next(error) })
+    .catch(error => next(error) )
 })
 
 app.delete('/api/notes/:id', (request, response, next) => {
